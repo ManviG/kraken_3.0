@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>gui_2</class>
+ <widget class="QWidget" name="gui_2">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>915</width>
+    <height>567</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>gui_2</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>3</x>
+     <y>61</y>
+     <width>155</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_marker2_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>97</y>
+     <width>169</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_buoy_blue_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>-1</x>
+     <y>127</y>
+     <width>179</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_buoy_green_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_marker2_to_pool">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>58</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_buoy_blue_to_pool">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>91</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_buoy_green_to_pool">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>124</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="change">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>50</y>
+     <width>99</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>change</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="parser">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>10</y>
+     <width>99</width>
+     <height>27</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>start parsing</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="textEdit">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>110</y>
+     <width>104</width>
+     <height>78</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>-1</x>
+     <y>157</y>
+     <width>163</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_buoy_red_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>197</y>
+     <width>155</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_marker3_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>227</y>
+     <width>155</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_marker4_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_7">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>257</y>
+     <width>155</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_marker5_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>297</y>
+     <width>152</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_shooter_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_9">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>327</y>
+     <width>154</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_dropper_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_10">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>357</y>
+     <width>137</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_L_rod_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_buoy_red_to_pool">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>157</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_marker3_to_pool">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>190</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_marker4_to_pool">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>223</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_marker5_to_pool">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>256</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_shooter_to_pool">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>289</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_dropper_to_pool">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>322</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_L_rod_to_pool">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>355</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_11">
+   <property name="geometry">
+    <rect>
+     <x>136</x>
+     <y>10</y>
+     <width>81</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>xyz values</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_marker5_to_pool_r">
+   <property name="geometry">
+    <rect>
+     <x>684</x>
+     <y>266</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_12">
+   <property name="geometry">
+    <rect>
+     <x>493</x>
+     <y>137</y>
+     <width>179</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_buoy_green_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_13">
+   <property name="geometry">
+    <rect>
+     <x>503</x>
+     <y>237</y>
+     <width>155</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_marker4_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_shooter_to_pool_r">
+   <property name="geometry">
+    <rect>
+     <x>684</x>
+     <y>299</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_buoy_red_to_pool_r">
+   <property name="geometry">
+    <rect>
+     <x>684</x>
+     <y>167</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_L_rod_to_pool_r">
+   <property name="geometry">
+    <rect>
+     <x>684</x>
+     <y>365</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_14">
+   <property name="geometry">
+    <rect>
+     <x>503</x>
+     <y>267</y>
+     <width>155</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_marker5_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_15">
+   <property name="geometry">
+    <rect>
+     <x>503</x>
+     <y>307</y>
+     <width>152</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_shooter_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_16">
+   <property name="geometry">
+    <rect>
+     <x>503</x>
+     <y>207</y>
+     <width>155</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_marker3_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_17">
+   <property name="geometry">
+    <rect>
+     <x>497</x>
+     <y>71</y>
+     <width>155</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_marker2_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_marker4_to_pool_r">
+   <property name="geometry">
+    <rect>
+     <x>684</x>
+     <y>233</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_18">
+   <property name="geometry">
+    <rect>
+     <x>503</x>
+     <y>337</y>
+     <width>154</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_dropper_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_marker2_to_pool_r">
+   <property name="geometry">
+    <rect>
+     <x>684</x>
+     <y>68</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_19">
+   <property name="geometry">
+    <rect>
+     <x>503</x>
+     <y>367</y>
+     <width>137</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_L_rod_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_buoy_blue_to_pool_r">
+   <property name="geometry">
+    <rect>
+     <x>684</x>
+     <y>101</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_20">
+   <property name="geometry">
+    <rect>
+     <x>493</x>
+     <y>167</y>
+     <width>163</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_buoy_red_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_dropper_to_pool_r">
+   <property name="geometry">
+    <rect>
+     <x>684</x>
+     <y>332</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_buoy_green_to_pool_r">
+   <property name="geometry">
+    <rect>
+     <x>684</x>
+     <y>134</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_21">
+   <property name="geometry">
+    <rect>
+     <x>503</x>
+     <y>107</y>
+     <width>169</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>gate_buoy_blue_to_pool</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="gate_marker3_to_pool_r">
+   <property name="geometry">
+    <rect>
+     <x>684</x>
+     <y>200</y>
+     <width>146</width>
+     <height>27</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_22">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>20</y>
+     <width>91</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>rpy values</string>
+   </property>
+  </widget>
+  <widget class="QSlider" name="horizontalSlider">
+   <property name="geometry">
+    <rect>
+     <x>100</x>
+     <y>390</y>
+     <width>160</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QProgressBar" name="progressBar">
+   <property name="geometry">
+    <rect>
+     <x>110</x>
+     <y>450</y>
+     <width>118</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="value">
+    <number>24</number>
+   </property>
+  </widget>
+  <zorder>gate_marker2_to_pool</zorder>
+  <zorder>label</zorder>
+  <zorder>label_2</zorder>
+  <zorder>label_3</zorder>
+  <zorder>gate_buoy_blue_to_pool</zorder>
+  <zorder>gate_buoy_green_to_pool</zorder>
+  <zorder>change</zorder>
+  <zorder>parser</zorder>
+  <zorder>textEdit</zorder>
+  <zorder>label_4</zorder>
+  <zorder>label_5</zorder>
+  <zorder>label_6</zorder>
+  <zorder>label_7</zorder>
+  <zorder>label_8</zorder>
+  <zorder>label_9</zorder>
+  <zorder>label_10</zorder>
+  <zorder>gate_buoy_red_to_pool</zorder>
+  <zorder>gate_marker3_to_pool</zorder>
+  <zorder>gate_marker4_to_pool</zorder>
+  <zorder>gate_marker5_to_pool</zorder>
+  <zorder>gate_shooter_to_pool</zorder>
+  <zorder>gate_dropper_to_pool</zorder>
+  <zorder>gate_L_rod_to_pool</zorder>
+  <zorder>label_11</zorder>
+  <zorder>gate_marker5_to_pool_r</zorder>
+  <zorder>label_12</zorder>
+  <zorder>label_13</zorder>
+  <zorder>gate_shooter_to_pool_r</zorder>
+  <zorder>gate_buoy_red_to_pool_r</zorder>
+  <zorder>gate_L_rod_to_pool_r</zorder>
+  <zorder>label_14</zorder>
+  <zorder>label_15</zorder>
+  <zorder>label_16</zorder>
+  <zorder>label_17</zorder>
+  <zorder>gate_marker4_to_pool_r</zorder>
+  <zorder>label_18</zorder>
+  <zorder>gate_marker2_to_pool_r</zorder>
+  <zorder>label_19</zorder>
+  <zorder>gate_buoy_blue_to_pool_r</zorder>
+  <zorder>label_20</zorder>
+  <zorder>gate_dropper_to_pool_r</zorder>
+  <zorder>gate_buoy_green_to_pool_r</zorder>
+  <zorder>label_21</zorder>
+  <zorder>gate_marker3_to_pool_r</zorder>
+  <zorder>label_22</zorder>
+  <zorder>horizontalSlider</zorder>
+  <zorder>progressBar</zorder>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
