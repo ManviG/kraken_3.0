@@ -1,0 +1,19 @@
+<package>
+  <description brief="blob">
+
+     blob
+
+  </description>
+  <author>IKAT</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/blob</url>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+<export>
+  <cpp cflags="-I${prefix}/include/" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lblob" />
+</export>
+
+</package>
+
+

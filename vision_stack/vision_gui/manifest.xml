@@ -1,0 +1,18 @@
+<package>
+  <description brief="ImageNew">
+
+     ImageNew
+
+  </description>
+  <author>Siddharth Kannan</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/ImageNew</url>
+  <depend package="roscpp"/>
+  <depend package="opencv2"/>
+  <depend package="blob"/>
+  <depend package="resources"/>
+
+</package>
+
+
