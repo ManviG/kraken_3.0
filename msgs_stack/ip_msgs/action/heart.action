@@ -1,0 +1,14 @@
+#goal definition
+int32 heart
+---
+#result definition
+float32 centerx
+float32 centery
+int32 fresult
+
+
+---
+#feedback
+int32 errorx
+int32 errory
+float32 errorangle
