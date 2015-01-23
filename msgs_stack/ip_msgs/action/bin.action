@@ -1,0 +1,12 @@
+#goal
+int32 cross
+int32 circle
+
+---
+#result
+int32 result
+
+---
+#feedback
+int32 errorx
+int32 errory
