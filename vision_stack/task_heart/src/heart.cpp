@@ -25,38 +25,83 @@
 
 using namespace std;
 using namespace cv;
-int slider = 100;
-const int max_slider = 800;
 
-
-Mat img_1, img_2;
-void on_trackbar(int, void*)
-{
-    SurfFeatureDetector detector( slider );
-      std::vector<KeyPoint> keypoints_1, keypoints_2;
-      detector.detect( img_1, keypoints_1 );
-      detector.detect( img_2, keypoints_2 );
-
-      Mat img_keypoints_1; Mat img_keypoints_2;
-      drawKeypoints( img_1, keypoints_1, img_keypoints_1, Scalar::all(-1), DrawMatchesFlags::DEFAULT );
-      drawKeypoints( img_2, keypoints_2, img_keypoints_2, Scalar::all(-1), DrawMatchesFlags::DEFAULT );
-
-      imshow("Keypoints 1", img_keypoints_1 );
-      imshow("Keypoints 2", img_keypoints_2 );
-}
+Mat img_1;
 
 
 
 int main(int argc, char** argv){
-      img_1 = imread( "/home/manvi/ros_ws/heartTask/bin/heart.jpg", CV_LOAD_IMAGE_COLOR );
-      img_2 = imread( "/home/manvi/Desktop/heart3.jpg", CV_LOAD_IMAGE_COLOR );
-      if( !img_1.data || !img_2.data )
-      { std::cout<< " --(!) Error reading images " << std::endl; return -1; }
+    Mat _imageHSV,_green, _red, _merge, _median,_kernel;
+    img_1 = imread( argv[1],1 );
 
 
-      namedWindow("Keypoints 1",1);
-      createTrackbar("minhessian","Keypoints 1",&slider, max_slider, on_trackbar);
-      on_trackbar(slider,0);
-      waitKey(0);
-      return 0;
+    CBlobResult _blobs1,_blobs2;
+    CBlob * _currentBlob1,*_currentBlob2;
+    CBlob _cb;
+    //              Scalar lowval(0,0,0), highval(20,255,255);
+    _kernel = getStructuringElement( MORPH_RECT, Size( 3, 3 ) ,Point(-1,-1));
+    cvtColor(img_1, _imageHSV, CV_BGR2HSV);
+    imshow("img_1", _imageHSV);
+    inRange(_imageHSV,Scalar(0,75,75),Scalar(40,255,255), _red);
+    inRange(_imageHSV,Scalar(35,0,0),Scalar(75,255,255), _green);
+    add(_green, _red, _merge);
+
+    vector<vector<Point> > contours;
+    adaptiveThreshold(_merge,_median,200,ADAPTIVE_THRESH_MEAN_C,THRESH_BINARY,13,0);
+    erode(_median,_median,_kernel);
+    dilate(_median,_median,_kernel);
+
+    IplImage fimage = _median;
+    _blobs1 = CBlobResult(&fimage,NULL,0);
+    _blobs2 = CBlobResult(&fimage,NULL,0);
+    //    cout << "blobs.. \n";
+    _blobs1.Filter(_blobs1, B_EXCLUDE, CBlobGetArea(), B_GREATER, 100);
+    _blobs2.Filter(_blobs2,B_INCLUDE,CBlobGetArea(), B_LESS, 40);
+
+    //    cout << "1";
+    for(int i=0; i< _blobs1.GetNumBlobs();i++){
+        _currentBlob1 = _blobs1.GetBlob(i);
+        _currentBlob1->FillBlob(&fimage,Scalar(255));
+    }
+
+    for (int i = 0; i < _blobs2.GetNumBlobs(); i++)
+    {
+        _currentBlob2=_blobs2.GetBlob(i);
+        _currentBlob2->FillBlob(&fimage,Scalar(0));
+    }
+
+    Mat fmat(&fimage);
+
+    imshow("after blob detection",fmat);
+
+
+
+    findContours(_merge, contours,CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
+    vector<vector<Point> > polygon(contours.size());
+    vector<RotatedRect> _rect(contours.size());
+
+    vector<double> _contourarea;
+    vector<Point> _fcontour;
+    double max=0;
+    for (int i = 0; i < contours.size(); ++i) {
+        if(contourArea(contours[i]) > 200)
+        {
+            approxPolyDP(contours[i],polygon[i],3,true);
+            _rect[i] = minAreaRect(Mat(polygon[i]));
+            Point2f points[4];
+            _rect[i].points(points);
+            rectangle(_merge,points[0],points[3],Scalar(255,0,0),2);
+            if(contourArea(contours[i]) > max){
+                max = contourArea(contours[i]);
+                cout << "hello ";
+                rectangle(_merge,points[0],points[3],Scalar(255,0,0),3);
+            }
+        }
+    }
+
+    imshow("red", _red);
+    imshow("green",_green);
+    imshow("final", _merge);
+    waitKey(0);
+    return 0;
 }
