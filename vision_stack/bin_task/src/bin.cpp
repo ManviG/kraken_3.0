@@ -33,6 +33,7 @@ struct bunch{
 
 vector<Vec3f> circles;
 
+
 void detectCircle(){
     HoughCircles(thresh,circles,CV_HOUGH_GRADIENT,1,thresh.rows/16,150,25,0,0);
     if(circles.size() == 0)
@@ -78,7 +79,28 @@ int main(int argc, char** argv)
         return 0;
 
 
+
     findContours(thresh,contours,CV_RETR_CCOMP,CV_CHAIN_APPROX_SIMPLE,Point(0,0));
+
+    vector<RotatedRect> _rect(contours.size());
+    RotatedRect _rr;
+    _rr = minAreaRect(contours[0]);
+    Point2f pp[4];
+    _rr.points(pp);
+    rectangle(orgimg,pp[0],pp[3],Scalar(255,255,0),4);
+    Point2f points[4];
+    RotatedRect _rrt;
+    for(size_t i=0; i<contours.size(); i++){
+        cout << "rectangle.. ";
+        _rect[i] = minAreaRect(contours[i]);
+        _rect[i].points(points);
+        rectangle(orgimg,points[0],points[3],Scalar(255,0,0),2);
+        imshow("orgimg", orgimg);
+        waitKey(0);
+    }
+
+
+
     polygon.resize(contours.size());
 
     cout << contours.size() << " = contours size " << endl;
@@ -109,26 +131,26 @@ int main(int argc, char** argv)
     int count=0;
     for (int i = 0; i < lines.size() - 1; ++i) {
 
-//        line(newimg,Point(lines[i][0],lines[i][1]),Point(lines[i][2],lines[i][3]),Scalar(255,255,0),1);
+        //        line(newimg,Point(lines[i][0],lines[i][1]),Point(lines[i][2],lines[i][3]),Scalar(255,255,0),1);
         if(lines[i][2]-lines[i][0] !=0){
             slope = atan((double)(lines[i][3]-lines[i][1])/(double)(lines[i][2]-lines[i][0]));
-//            cout << "slope for line[" << i<<"] = " << slope << endl;
-//            line(newimg,Point(lines[i][0],lines[i][1]),Point(lines[i][2],lines[i][3]),Scalar(255,0,255),1);
+            //            cout << "slope for line[" << i<<"] = " << slope << endl;
+            //            line(newimg,Point(lines[i][0],lines[i][1]),Point(lines[i][2],lines[i][3]),Scalar(255,0,255),1);
         }
         else{
             slope = 90*CV_PI/180;
-//            line(newimg,Point(lines[i][0],lines[i][1]),Point(lines[i][2],lines[i][3]),Scalar(255,0,0),1);
+            //            line(newimg,Point(lines[i][0],lines[i][1]),Point(lines[i][2],lines[i][3]),Scalar(255,0,0),1);
         }
 
 
 
         if(slope<30*CV_PI/180  || slope>150*CV_PI/180){
-//            _linesx.push_back(lines[i]);
+            //            _linesx.push_back(lines[i]);
             cout << "slope of line drawn in x = " << slope << endl;
             line(newimg,Point(lines[i][0],lines[i][1]),Point(lines[i][2],lines[i][3]),Scalar(255,0,0),2);
         }
         else if(slope>70*CV_PI/180 && slope<120*CV_PI/180){
-//            _linesy.push_back(lines[i]);
+            //            _linesy.push_back(lines[i]);
             cout << "slope of line drawn in y = " << slope << endl;
             line(orgimg,Point(lines[i][0],lines[i][1]),Point(lines[i][2],lines[i][3]),Scalar(255,255,0),2);
         }
