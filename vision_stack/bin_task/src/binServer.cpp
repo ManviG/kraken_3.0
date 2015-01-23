@@ -4,228 +4,212 @@
 #include <binTask/binHeader.h>
 #include <binTask/binGoal.h>
 #include <binTask/binResult.h>
-// #include <binTask/binAction.h>
+//#include <binTask/binAction.h>
+
 
 bin_task::bin_task()
     :serv(_n,"bin_server",boost::bind(&bin_task::serverCallback,this,_1),false), _it(_n)
 {
-    image = imread("/home/manvi/ros_ws/binTask/bin/bin.jpg" , CV_LOAD_IMAGE_COLOR);
+
+    _imgsub = _it.subscribe(topics::CAMERA_FRONT_RAW_IMAGE,10,&bin_task::imageCallback,this);
+
     if(!image.data){
         cout << "image canot be opened";
         shutdown();
     }
-    medianx= 0;
-    mediany = 0;
 
+    median.x= 0;
+    median.y = 0;
     imgCenter.x = image.rows/2;
     imgCenter.y = image.cols/2;
 
     ifstream _ifo("/home/manvi/ros_ws/binTask/threshold.th",ios::in);
-        if(_ifo.is_open())
-            {
-                for(int i=0; i<3;i++)
-                    _ifo >> low[i];
-                for(int i=0;i<3;i++)
-                    _ifo >> high[i];
-            }
-        else
-            {
-                cout << "threshold file could not be opened.." << endl;
-                shutdown();
-            }
+    if(_ifo.is_open())
+    {
+        for(int i=0; i<3;i++)
+            _ifo >> low[i];
+        for(int i=0;i<3;i++)
+            _ifo >> high[i];
+    }
+    else
+    {
+        cout << "threshold file could not be opened.." << endl;
+        shutdown();
+    }
+
     _kernel = getStructuringElement(MORPH_RECT, Size(3,3),Point(-1,-1));
     _pub = _it.advertise("bin_server",1);
     serv.start();
-    ROS_INFO("waiting for clients");
-    imshow("win", image);
-
-//    if(waitKey(33)==27)
-//        cout << "end process";
+    ROS_INFO("waiting for clients");;
 }
 
 
-void bin_task::detectbin(){
-    _fimg = Mat::zeros(image.size(),CV_8UC3);
-    drawing = Mat::zeros(image.size(),CV_8UC3);
+bool bin_task::detectbin(){
 
-    cvtColor(image, hsv, CV_BGR2HSV_FULL);
-//    createTrackbar("cvtcolor","hsv image",&slider,slider_max,on_trackbar);
+    cvtColor(img_1, _imageHSV, CV_BGR2HSV);
+    imshow("img_1", _imageHSV);
+    inRange(_imageHSV,Scalar(0,75,75),Scalar(40,255,255), _red);
+    inRange(_imageHSV,Scalar(35,0,0),Scalar(75,255,255), _green);
+    add(_green, _red, _merge);
 
-    cvtColor(image,gray,CV_BGR2GRAY);
-    inRange(hsv,low,high,thresh);
-    medianBlur(thresh,thresh,3);
-    dilate(thresh,dilate_img,_kernel);
+    adaptiveThreshold(_merge,_median,200,ADAPTIVE_THRESH_MEAN_C,THRESH_BINARY,13,0);
+    erode(_median,_median,_kernel);
+    dilate(_median,_median,_kernel);
 
-    findContours(dilate_img,contours,CV_RETR_EXTERNAL,CV_CHAIN_APPROX_SIMPLE,Point(0,0));
-    cout << "contours size" <<contours.size() << endl;
-    vector<vector<Point> > temp(contours.size());
-    vector<vector<Point> > hull(contours.size());
-    vector<int> _medianx(contours.size(),0), _mediany(contours.size(),0);
-    cout << _medianx.size();
-//    vector<Vec3f> circles;
-        drawContours(_fimg,contours,-1,Scalar(255,255,255),1,8);
-        for(int i=0; i<contours.size(); i++){
-            cout << "contours.size = " << i << endl;
-            convexHull(Mat(contours[i]),hull[i],false);
-        }
-//        drawContours( drawing, hull, -1, Scalar(255,255,255), 1, 8);
-//        cout <<"hull size"<< hull.size() << endl;
-        for(int i=0; i<hull.size(); i++){
-            cout << "size of hull [" << i << "]" << hull[i].size() << endl;
-        }
-//        cout << "hull_size = " << hull[0].size() << endl;
-        for(int i=0; i<hull.size(); i++){
-            for(int j=0; j<hull[i].size(); j++){
-                cout << "hull["<<i<<"]["<< j << "].x = " << hull[i][j].x << endl;
-                _medianx[i] += hull[i][j].x;
-                _mediany[i] += hull[i][j].y;
-            }
-            _medianx[i] = _medianx[i]/hull[i].size();
-            _mediany[i] = _mediany[i]/hull[i].size();
-            cout << "_medianx["<<i <<"] = " << _medianx[i] << endl;
-            cout << "_medianx["<<i <<"] = " << _medianx[i] << endl;
-        }
+    IplImage fimage = _median;
+    _blobs1 = CBlobResult(&fimage,NULL,0);
+    _blobs2 = CBlobResult(&fimage,NULL,0);
+    _blobs1.Filter(_blobs1, B_EXCLUDE, CBlobGetArea(), B_GREATER, 100);
+    _blobs2.Filter(_blobs2,B_INCLUDE,CBlobGetArea(), B_LESS, 40);
 
-
-        for(int i=0; i<hull[0].size(); i++){
-            cout << hull[0][i].x << endl;
-            medianx += hull[0][i].x ;
-            mediany += hull[0][i].y ;
-        }
-
-
-        medianx = medianx/hull[0].size();
-        mediany = mediany/hull[0].size();
-        cout << "\n median x of bin = " << medianx << endl;
-        cout << "\n median y of bin = " << mediany << endl;
-        circle(image,Point(medianx,mediany),5,Scalar(255,255,255),2,8,0);
-
-    for(int i=0; i<contours.size(); i++){
-        approxPolyDP(contours[i],temp[i],7, true);
-        cout << contourArea(temp[i]) <<endl;
+    for(int i=0; i< _blobs1.GetNumBlobs();i++){
+        _currentBlob1 = _blobs1.GetBlob(i);
+        _currentBlob1->FillBlob(&fimage,Scalar(255));
     }
 
-   // drawContours(thresh,temp,0,Scalar(127,150,0));
- //   HoughCircles(gray2,circles,CV_HOUGH_GRADIENT,1,2,200,100);
-//    cout << circles.size() <<endl;
+    for (int i = 0; i < _blobs2.GetNumBlobs(); i++)
+    {
+        _currentBlob2=_blobs2.GetBlob(i);
+        _currentBlob2->FillBlob(&fimage,Scalar(0));
+    }
 
-//    for( size_t i=0; i<circles.size(); i++){
-//       // cout << "circles.Size" << circles.size();
-//        Point center(cvRound(circles[i][0]),cvRound(circles[i][1]));
-//        float radius = cvRound(circles[i][2]);
-//        circle(gray2,center,3,Scalar(127,100,100));
-//        circle(gray2,center,radius,Scalar(127,100,100));
-//    }
-//    minEnclosingCircle(temp[0],center[0],radius[0]);
-//    circle(thresh,center[0],radius[0],Scalar(127,0,0));
-    imshow("original" , image);
-    imshow("hsv", hsv);
-//    imshow("")
-    imshow("win", thresh);
-//    imshow("win2", gray2);
-    imshow("dilate", dilate_img);
-    imshow("contours",_fimg);
-    imshow("drawing", drawing);
+    Mat fmat(&fimage);
+    imshow("fmat",fmat);
+
+
+    findContours(_merge, contours,CV_RETR_CCOMP, CV_CHAIN_APPROX_SIMPLE);
+    vector<vector<Point> > polygon(contours.size());
+    vector<RotatedRect> _rect(contours.size());
+
+    for (int i = 0; i < contours.size(); ++i) {
+        if(contourArea(contours[i]) > 200)
+        {
+            approxPolyDP(contours[i],polygon[i],3,true);
+            _rect[i] = minAreaRect(Mat(polygon[i]));
+            Point2f points[4];
+            _rect[i].points(points);
+            rectangle(_merge,points[0],points[3],Scalar(255,0,0),2);
+            if(contourArea(contours[i]) > max){
+                max = contourArea(contours[i]);
+
+                _fcontour = contours[i];
+                _frect = minAreaRect(Mat(_fcontour));
+                _frect.points(_fpoints);
+                cout << "hello ";
+                rectangle(_merge,_fpoints[0],_fpoints[3],Scalar(255,0,0),3);
+                bin_detect_status = true;
+            }
+        }
+    }
+
+
+    for(int i=0; i<4; i++){
+        median.x += _fpoints[i].x;
+        median.y += _fpoints[i].y;
+    }
+
+    median.x = median.x/4;
+    median.y = median.y/4;
+
+    circle(img_1,median,5,Scalar(255,255,255),2,8,0);
+
+    if(median.x ==0 || median.y == 0){
+        bin_detect_status = false;
+    }
+    else
+        bin_detect_status = true;
+
 
     sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(),"bgr8",image).toImageMsg();
-//   sensor_msgs::ImagePtr msg=object.toImageMsg();
-           _pub.publish(msg);
-           imshow("_fimg",_fimg);
-           if(waitKey(33)==27)
-             return;
+    _pub.publish(msg);
+
+    if(waitKey(33)==27)
+        return true;
+
+    return bin_detect_status;
 }
 
 void bin_task::alignCenter(){
-//    ROS_INFO("center.x and center.y are : %f %f ", medianx,mediany);
-    _feed.errorx = medianx-(image.rows/2);
-    _feed.errory = mediany-(image.cols/2);
 
-    radius = sqrt(pow((medianx-imgCenter.x),2)+pow((mediany-imgCenter.y),2));
-    if(radius<10){
-        if(medianx - imgCenter.x<0 && mediany - imgCenter.y>0)
-            ROS_INFO("GO RIGHT AND THEN DOWNWARDS");
-        else if(medianx- imgCenter.x >0 && mediany -imgCenter.y >0)
-            ROS_INFO("GO LEFT AND THEN DOWNWARDS");
-        else if (medianx -imgCenter.x <0 && mediany-imgCenter.y <0) {
-            ROS_INFO("GO right and the upwards");
-        }
-        else if(medianx -imgCenter.x >0 && mediany-imgCenter.y <0)
-            ROS_INFO("go left and then upwards");
-    }
+    _error.x = median.x-imgCenter.x;
+    _error.y = median.y-imgCenter.y;
 
-//   ROS_INFO("error x and error y : %f %f", _feed.errorx, _feed.errory);
+    //    if(_error.x<0 && _error.y>0)
+    //        ROS_INFO("GO RIGHT AND THEN DOWNWARDS");
+    //    else if(_error.x >0 && _error.y >0)
+    //        ROS_INFO("GO LEFT AND THEN DOWNWARDS");
+    //    else if (_error.x <0 && _error.y <0)
+    //        ROS_INFO("GO right and the upwards");
+    //    else if(_error.x >0 && _error.y<0)
+    //        ROS_INFO("go left and then upwards");
 }
+
 
 
 void bin_task::serverCallback(const ip_msgs::binGoalConstPtr &goal)
 {
     Rate looprate(10);
     switch (goal->bin) {
-    case DETECT_CENTER:
+    case DETECT_bin:
     {
-        ROS_INFO("start detecting validation gate...");
+        ROS_INFO("detect bin..");
         while(ok()){
             if(serv.isPreemptRequested())
             {
-                res.centerx = medianx;
-                res.centery = mediany;
+                res.centerx = _error.x;
+                res.centery = _error.y;
                 serv.setPreempted(res);
                 break;
             }
-            detectbin();
+            _status = detectbin();
 
-            if((medianx - (image.rows/2))< 10 && (mediany - (image.cols/2))< 10 ){
-                _feed.hfeed = GO_STRAIGHT;
-                res.hresult = CENTER_DETECTED;
+            if(_status){
+                ROS_INFO("bin has been detected..\n");
+                res.centerx = _error.x;
+                res.centery = _error.y;
+                res.fresult = bin_DETECTED;
                 serv.setSucceeded(res);
+            }else{
+                ROS_INFO("bin has not been detected..\n continue search");
+                res.fresult = NOT_DETECTED;
+                serv.setAborted(res);
             }
+
+
             serv.publishFeedback(_feed);
-            if(medianx == 0 && mediany == 0)
-                res.hresult = NOT_DETECTED;
-            else{
-                res.centerx = medianx;
-                res.centery = mediany;
-                res.hresult = CENTER_DETECTED;
-                serv.setSucceeded(res);
-            }
             looprate.sleep();
-             medianx =0;
-             mediany =0;
+            _error.x =0;
+            _error.y =0;
         }
-       break;
+        break;
     }
 
 
-    case ALIGN_CENTER:
+    case ALIGN_bin:
     {
         ROS_INFO("start aligning..!!!");
         while(ok()){
             if(serv.isPreemptRequested()){
-                res.centerx = medianx;
-                res.centery = mediany;
+                res.centerx = _error.x;
+                res.centery = _error.y;
                 serv.setPreempted(res);
                 break;
             }
-
-            detectbin();
-
-            if(abs(imgCenter.x-medianx) < 10 && abs(imgCenter.y-mediany) < 10){
-                _feed.hfeed = GO_STRAIGHT;
-                res.hresult = CENTER_DETECTED;
-                serv.setSucceeded(res);
-            }
-
-            else{
+            _status = detectbin();
+            if(_status){
                 alignCenter();
-                if(_feed.errorx <= 10 && _feed.errory <=10)
-                   {
-                       res.centerx = medianx;
-                       res.centery = mediany;
-                       res.hresult = CENTER_ALIGNED;
-                       serv.setSucceeded(res);
-                       break;
-                   }
-
+                if(fabs(_error.x) < 10 && fabs(_error.y) < 10){
+                    _feed.errorx = _error.x;
+                    _feed.errory =bin_ALIGNED;
+                    serv.setSucceeded(res);
+                }
+                else{
+                    ROS_INFO("detect gate first.. and then align..");
+                    _feed.errorx = _error.x;
+                    _feed.errory = _error.y;
+                    res.fresult = NOT_DETECTED;
+                    serv.setAborted(res);
+                }
             }
             serv.publishFeedback(_feed);
             looprate.sleep();
@@ -236,43 +220,33 @@ void bin_task::serverCallback(const ip_msgs::binGoalConstPtr &goal)
 }
 
 
-//void binTask::imageCallback(const sensor_msgs::ImageConstPtr &ptr){
-//    cv_bridge::CvImagePtr bridge_ptr;
-//            try
-//            {
-//                 bridge_ptr = cv_bridge::toCvCopy(ptr,"8UC3");
-//            }
-//            catch (cv_bridge::Exception& e)
-//            {
-//                 ROS_ERROR("cv_bridge exception: %s", e.what());
-//                return;
-//            }
 
-//            I2=bridge_ptr->image;
-//            imshow("subscribed img",bridge_ptr->image);
-//            waitKey(40);
-//}
+void bin_task::imageCallback(const sensor_msgs::ImageConstPtr &ptr){
+    cv_bridge::CvImagePtr bridge_ptr;
+    try
+    {
+        bridge_ptr = cv_bridge::toCvCopy(ptr,"8UC3");
+    }
+    catch (cv_bridge::Exception& e)
+    {
+        ROS_ERROR("cv_bridge exception: %s", e.what());
+        return;
+    }
 
-//void bin_task::on_trackbar(int, void * ){
-//        Scalar thresh1(0,slider,50), thresh2(255,slider_max,255);
-//        inRange(hsv,thresh1,thresh2,trackimg);
-//        imshow("hsv image" , trackimg);
-//}
+    I2=bridge_ptr->image;
+    image = I2;
+    imshow("subscribed img",image);
+    waitKey(40);
+}
+
 
 bin_task::~bin_task(){
 
 }
 
-
-
-
 int main(int argc, char** argv){
     ros::init(argc, argv, "talker");
-    // if(argc <2){
-    //     ROS_INFO("bin server");
-    //     ros::shutdown();
-    // }
-    bin_task ht;
+    bin_task bt;
     ros::spin();
     return 0;
 }
