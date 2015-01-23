@@ -1,2 +1,2 @@
-#define DETECT_CENTER 1
-#define ALIGN_CENTER 2
+#define DETECT_HEART 1
+#define ALIGN_HEART 2

@@ -1,4 +1,4 @@
 #define NOT_DETECTED 0
-#define CENTER_DETECTED 1
+#define HEART_DETECTED 1
 #define GO_STRAIGHT 2
-#define CENTER_ALIGNED 3
+#define HEART_ALIGNED 3

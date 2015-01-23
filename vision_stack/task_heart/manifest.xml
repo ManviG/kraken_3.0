@@ -16,6 +16,8 @@
   <depend package="blob"/>
   <depend package="actionlib"/>
   <depend package="cv_bridge"/>
+  <depend package="ip_msgs"/>
+  <depend package="resources"/>
 
 </package>
 

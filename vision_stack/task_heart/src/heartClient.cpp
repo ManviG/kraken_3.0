@@ -1,3 +1,7 @@
+#ifndef HEART_C
+#define HEART_C
+
+
 #include <heartTask/heartHeader.h>
 #include <ip_msgs/heartAction.h>
 #include <actionlib/client/simple_action_client.h>
@@ -40,3 +44,5 @@ int main(int argc, char ** argv)
 
     return 0;
 }
+
+#endif HEART_C
